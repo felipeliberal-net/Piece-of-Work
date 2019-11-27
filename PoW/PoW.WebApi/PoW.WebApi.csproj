@@ -89,10 +89,14 @@
     <Compile Include="Swagger\ApiAvailableAttribute.cs" />
     <Compile Include="Swagger\ApiGroups.cs" />
     <Compile Include="Swagger\ApiResponseAttribute.cs" />
+    <Compile Include="Swagger\SwaggerAddEnumDescriptions.cs" />
+    <Compile Include="Swagger\SwaggerCachingProvider.cs" />
+    <Compile Include="Swagger\SwaggerConfig.cs" />
     <Compile Include="Swagger\SwaggerContentTypeFilter.cs" />
     <Compile Include="ViewModels\TaskWorkVO.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -102,6 +106,8 @@
       <Name>PoW.DataModel</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Swagger\swagger_customizations.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

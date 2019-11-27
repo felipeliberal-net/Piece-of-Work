@@ -16,7 +16,7 @@ namespace PoW.WebApi
         static void Main(string[] args)
         {
             const string url = "http://localhost:9000";
-
+            
             using (WebApp.Start<Startup>(url))
             {
                 HttpClient client = new HttpClient();
