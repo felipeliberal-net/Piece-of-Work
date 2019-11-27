@@ -1,4 +1,5 @@
 ﻿using Microsoft.Owin;
+using Microsoft.Owin.Cors;
 using Newtonsoft.Json.Serialization;
 using Owin;
 using PoW.WebApi.Swagger;
@@ -17,14 +18,10 @@ namespace PoW.WebApi
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
-            SwaggerCachingProvider swaggerProvider = new SwaggerCachingProvider();
-            SwaggerConfig swaggerConfig = new SwaggerConfig(swaggerProvider);
             
-            swaggerConfig.Register(config);
-
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{action}",
+                routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 
@@ -36,31 +33,15 @@ namespace PoW.WebApi
 
             config.Formatters.Add(jsonFormater);
 
-            
-            //config
-            //    .EnableSwagger(c =>
-            //    {
-            //        c.SingleApiVersion("v1", "Task Work API").Description("This is a tool for testing and prototyping the Task Work API.");
-
-            //        c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
-            //        c.IncludeXmlComments(GetXmlCommentPath());
-                    
-            //        c.PrettyPrint();
-            //    })
-            //    .EnableSwaggerUi("api/help/{*assetPath}", c =>
-            //    {
-            //        c.DisableValidator();
-
-            //        c.DocExpansion(DocExpansion.List);
-            //    });
+            config
+                .EnableSwagger(c =>
+                {
+                    c.SingleApiVersion("v1", "Task Work API");
+                    c.PrettyPrint();
+                })
+                .EnableSwaggerUi(c => c.DisableValidator());
 
             app.UseWebApi(config);
-        }
-
-        private string GetXmlCommentPath()
-        {
-            return AppDomain.CurrentDomain.BaseDirectory + @"PoW.WebApi.xml";
         }
     }
 }

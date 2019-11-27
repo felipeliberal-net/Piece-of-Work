@@ -1,19 +1,22 @@
 ﻿using PoW.DataModel.Models;
 using PoW.WebApi.Exceptions;
+using PoW.WebApi.Services;
 using PoW.WebApi.Swagger;
-using PoW.WebApi.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
 namespace PoW.WebApi.Controllers
 {
     /// <summary>
-    /// Controller that contains the web api endpoints.
+    /// This Controller provides to the API client, methods to be consummed.
     /// </summary>
     public class TaskWorkController : ApiController
     {
-        private readonly ApiService service = new ApiService();
+        private readonly TaskWorkService service = new TaskWorkService();
 
         /// <summary>
         /// This method returns a specific task work.
@@ -22,17 +25,18 @@ namespace PoW.WebApi.Controllers
         /// <returns>A TaskWork object.</returns>
         [HttpGet, Route(@"taskwork/{id:int}")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
-        [ApiResponseOk(Type = typeof(TaskWork))]
-        public TaskWork Get(int id)
+        [ApiResponseOk(Type = typeof(TaskWorkWrapperVO<TaskWorkVO>))]
+        public async Task<HttpResponseMessage> Get(int id)
         {
             try
             {
-                return service.Get(id);
+                var taskwork = await service.GetAsync(id);
+                return Request.CreateResponse(HttpStatusCode.OK, taskwork);
             }
             catch (EntityNotFoundException)
             {
                 Console.WriteLine("Task not found");
-                return null;
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Tarefa não encontrada.");
             }
 
         }
@@ -43,12 +47,19 @@ namespace PoW.WebApi.Controllers
         /// <returns>A list of TaskWorks objects.</returns>
         [HttpGet, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
-        [ApiResponseOk(Type = typeof(List<TaskWork>))]
-        public IEnumerable<TaskWork> Get()
+        [ApiResponseOk(Type = typeof(TaskWorkListVO<TaskWorkVO>))]
+        public async Task<HttpResponseMessage> Get()
         {
-            return service.List;
+            try
+            {
+                var list = await service.GetListAsync();
+                return Request.CreateResponse(HttpStatusCode.OK, list);
+            }
+            catch (EntityNotFoundException)
+            {
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Tarefa não encontrada.");
+            }
         }
-
 
         /// <summary>
         /// This method creates a new task work.
@@ -56,18 +67,18 @@ namespace PoW.WebApi.Controllers
         /// <param name="vo">New task work object.</param>
         [HttpPost, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
-        [ApiResponseOk(Type = typeof(void))]
-        public void Post([FromBody]TaskWorkVO vo)
+        [ApiResponseOk(Type = typeof(int))]
+        public async Task<HttpResponseMessage> Post([FromBody]TaskWork vo)
         {
             try
             {
-                service.Insert(vo);
+                var id = await service.InsertAsync(vo);
+                return Request.CreateResponse(HttpStatusCode.OK, id);
             }
-            catch (EntityNotFoundException)
+            catch (Exception)
             {
-                Console.WriteLine("Task not found");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ocorreu um erro ao salvar a tarefa.");
             }
-
         }
 
 
@@ -76,18 +87,20 @@ namespace PoW.WebApi.Controllers
         /// </summary>
         /// <param name="id">Task work id.</param>
         /// <param name="vo">Task work object to be edited.</param>
-        [HttpPut, Route(@"taskwork/{id:int}")]
+        [HttpPut, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
-        [ApiResponseOk(Type = typeof(void))]
-        public void Put(int id, [FromBody]TaskWorkVO vo)
+        [ApiResponseOk]
+        public async Task<HttpResponseMessage> Put(int id, [FromBody]TaskWork vo)
         {
             try
             {
-                service.Update(id, vo);
+                await service.UpdateAsync(id, vo);
+                return Request.CreateResponse(HttpStatusCode.OK, "Tarefa atualizada com sucesso.");
             }
             catch (EntityNotFoundException)
             {
                 Console.WriteLine("Task not found");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ocorreu um erro ao salvar a tarefa.");
             }
 
         }
@@ -96,18 +109,20 @@ namespace PoW.WebApi.Controllers
         /// This method removes an existing task work.
         /// </summary>
         /// <param name="id">Task work id.</param>
-        [HttpDelete, Route(@"taskwork/{id:int}")]
+        [HttpDelete, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
-        [ApiResponseOk(Type = typeof(void))]
-        public void Delete(int id)
+        [ApiResponseOk]
+        public async Task<HttpResponseMessage> Delete(int id)
         {
             try
             {
-                service.Delete(id);
+                await service.DeleteAsync(id);
+                return Request.CreateResponse(HttpStatusCode.OK, "Tarefa removida com sucesso.");
             }
             catch (EntityNotFoundException)
             {
                 Console.WriteLine("Task not found");
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "Ocorreu um erro ao remover a tarefa.");
             }
 
         }
