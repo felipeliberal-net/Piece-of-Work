@@ -2,12 +2,8 @@
 using Microsoft.Owin.Cors;
 using Newtonsoft.Json.Serialization;
 using Owin;
-using PoW.WebApi.Swagger;
 using Swashbuckle.Application;
-using System;
-using System.Linq;
 using System.Web.Http;
-using System.Xml.XPath;
 
 [assembly: OwinStartup(typeof(PoW.WebApi.Startup))]
 
@@ -18,7 +14,9 @@ namespace PoW.WebApi
         public void Configuration(IAppBuilder app)
         {
             HttpConfiguration config = new HttpConfiguration();
-            
+
+            app.UseCors(CorsOptions.AllowAll);
+
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{action}/{id}",

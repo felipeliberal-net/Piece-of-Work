@@ -329,3 +329,5 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 /PoW/PoW.WebApi/.editorconfig
+
+/PoW.App/node_modules
