@@ -2,6 +2,7 @@
 using PoW.WebApi.Exceptions;
 using PoW.WebApi.Services;
 using PoW.WebApi.Swagger;
+using PoW.WebApi.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -68,7 +69,7 @@ namespace PoW.WebApi.Controllers
         [HttpPost, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
         [ApiResponseOk(Type = typeof(int))]
-        public async Task<HttpResponseMessage> Post([FromBody]TaskWork vo)
+        public async Task<HttpResponseMessage> Post([FromBody]TaskWorkInsertVO vo)
         {
             try
             {
@@ -90,7 +91,7 @@ namespace PoW.WebApi.Controllers
         [HttpPut, Route(@"taskwork")]
         [ApiAvailable(Groups = new[] { "TaskWorks" })]
         [ApiResponseOk]
-        public async Task<HttpResponseMessage> Put(int id, [FromBody]TaskWork vo)
+        public async Task<HttpResponseMessage> Put(int id, [FromBody]TaskWorkVO vo)
         {
             try
             {

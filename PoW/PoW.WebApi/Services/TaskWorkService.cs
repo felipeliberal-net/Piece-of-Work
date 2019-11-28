@@ -1,6 +1,7 @@
 ﻿using PoW.DataModel;
 using PoW.DataModel.Models;
 using PoW.WebApi.Exceptions;
+using PoW.WebApi.ViewModels;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -69,7 +70,7 @@ namespace PoW.WebApi.Services
         /// This method creates a new task work.
         /// </summary>
         /// <param name="vo">New task work object.</param>
-        public async Task<int> InsertAsync(TaskWork vo)
+        public async Task<int> InsertAsync(TaskWorkInsertVO vo)
         {
             using (var db = new PoWDbContext())
             {
@@ -91,7 +92,7 @@ namespace PoW.WebApi.Services
         /// </summary>
         /// <param name="id">Task work id.</param>
         /// <param name="vo">Task work object to be edited.</param>
-        public async Task UpdateAsync(int id, TaskWork vo)
+        public async Task UpdateAsync(int id, TaskWorkVO vo)
         {
             using (var db = new PoWDbContext())
             {
