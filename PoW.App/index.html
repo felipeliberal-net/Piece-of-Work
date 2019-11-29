@@ -1,67 +1,65 @@
 <html ng-app="pow.app">
-<head>
-	<title>Piece of Work</title>
-	<link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-	<link href="./assets/css/style.css" rel="stylesheet" />
-	
-</head>
-<body ng-controller="mainController">
-    <div class="page-title text-center">
-		<h1>Lista de tarefas</h1>
-		<h6 class="text-secondary">Gerencie suas tarefas de uma forma fácil</h6>
-    </div>
-    <div class="main">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="list-container">
-						<div class="list">
-							<h5 class="list-title">Pendente <span class="badge badge-info text-right">0</span></h5>
-							<ul class="list-items">
-								<li>Complete mock-up for client website</li>
-								<li>Email mock-up to client for feedback</li>
-								<li>Update personal website header background image</li>								
-							</ul>
-							<button class="add-card-btn btn">Adicionar tarefa...</button>
-						</div>
-					</div>					
-				</div>
-				<div class="col-md-4">
-					<div class="list-container">
-						<div class="list">
-							<h5 class="list-title">Em andamento <span class="badge badge-info text-right">0</span></h5>
-							<ul class="list-items">
-								<li>Complete mock-up for client website</li>
-								<li>Email mock-up to client for feedback</li>
-								<li>Update personal website header background image</li>								
-							</ul>
-							<a class="add-card-btn btn"><span class="fa fa-plus">Adicionar tarefa...</a></button>
+	<head>
+		<title>Piece of Work</title>
+		<link href="./node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-csp.css" rel="stylesheet" />
+		<link href="./node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="./assets/css/style.css" rel="stylesheet" />
+
+		<script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+		<script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
+		<script type="text/javascript" src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap.js"></script>
+		<script type="text/javascript" src="./node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+		<script type="text/javascript" src="./app-module.js"></script>
+		<script type="text/javascript" src="./app.js"></script>
+
+		<script type="text/javascript" src="./services/taskwork/taskwork-module.js"></script>
+		<script type="text/javascript" src="./services/taskwork/taskwork-service.js"></script>
+	</head>
+	<body ng-controller="mainController">
+		<div class="page-title text-center">
+			<h1>Lista de tarefas</h1>
+			<h6 class="text-secondary">Gerencie suas tarefas de uma forma fácil</h6>
+		</div>
+		<div class="main">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+						<div class="list-container">
+							<div class="list">
+								<h5 class="list-title">Pendente <span class="badge badge-info text-right">{{todoTasks.length}}</span></h5>
+								<ul class="list-items" ng-repeat="item in todoTasks">
+									<li ng-click=openTaskModal(item);>{{item.title}}</li>
+								</ul>
+								<button class="add-card-btn btn" ng-click=openTaskModal();><span class="fa fa-plus">&nbsp;Nova Tarefa</span></button>
+							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="list-container">
-						<div class="list">
-							<h5 class="list-title">Finalizado <span class="badge badge-info text-right">0</span></h5>
-							<ul class="list-items">
-								<li>Complete mock-up for client website</li>
-								<li>Email mock-up to client for feedback</li>
-								<li>Update personal website header background image</li>								
-							</ul>
-							<button class="add-card-btn btn">Adicionar tarefa...</button>
+					<div class="col-md-4">
+						<div class="list-container">
+							<div class="list">
+								<h5 class="list-title">Em andamento <span class="badge badge-info text-right">{{doingTasks.length}}</span></h5>
+								<ul class="list-items" ng-repeat="item in doingTasks">
+									<li>{{item.title}}</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="list-container">
+							<div class="list">
+								<h5 class="list-title">Finalizado <span class="badge badge-info text-right">{{doneTasks.length}}</span></h5>
+								<ul class="list-items" ng-repeat="item in doneTasks">
+									<li>{{item.title}}</li>
+								</ul>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-    </div>
-</body>
-<script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="./node_modules/angular/angular.min.js"></script>
-<script type="text/javascript" src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="./app-module.js"></script>
-<script type="text/javascript" src="./app.js"></script>
-
-<script type="text/javascript" src="./services/taskwork/taskwork-module.js"></script>
-<script type="text/javascript" src="./services/taskwork/taskwork-service.js"></script>
+		
+		<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>
+	</body>
 </html>

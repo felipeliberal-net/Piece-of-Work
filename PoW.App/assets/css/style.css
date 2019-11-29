@@ -1,5 +1,5 @@
 body {
-    font-family: "Lato"; 
+    font-family: "Montserrat"; 
     margin:0; 
     padding: 0;
 }
@@ -99,7 +99,7 @@ body {
 
 .add-card-btn {
     display: block;
-    font-size: 1.4rem;
+    font-size: 1.1rem;
     font-weight: 400;
     color: #838c91;
     padding: 1rem;
@@ -111,29 +111,6 @@ body {
     background-color: #cdd2d4;
     color: #4d4d4d;
     text-decoration: underline;
-}
-
-.add-list-btn {
-    flex: 0 0 27rem;
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 400;
-    background-color: #006aa7;
-    color: #a5cae0;
-    padding: 1rem;
-    border-radius: 0.3rem;
-    cursor: pointer;
-    transition: background-color 150ms;
-    text-align: left;
-}
-
-.add-list-btn:hover {
-    background-color: #005485;
-}
-
-.add-card-btn::after,
-.add-list-btn::after {
-    content: '...';
 }
 
 .success {
@@ -154,4 +131,14 @@ body {
 .error {
     background: #FB7D44; 
     color:#fff
+}
+
+.modal-backdrop {
+    z-index: 1040 !important;
+    opacity: 0.5 !important;
+}
+.modal-dialog {
+    margin: 2px auto;
+    z-index: 1100 !important;
+    opacity: 1 !important;
 }
