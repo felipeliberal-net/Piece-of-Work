@@ -16,3 +16,11 @@ Piece of Work é um app web para gerenciar suas tarefas.
 	* Angularjs.
 	* Bootstrap.
 	* Font-awesome.
+	* Angular-ui-bootstrap.
+	
+	Ferramentas necessárias para inicar:
+	* Nodejs
+	* Npm
+	
+	Para iniciar o servidor que lidará com os arquivos do front-end o usuário deve realizar o clone do repositório, acessar a pasta PoW.App e digitar o comando '''npm install'' (esse comando realiza o download dos pacotes necessários das bibliotecas acima mencionadas). Após este passo, o usuário deve digitar '''node server.js''' (esse comando iniciará o servidor na porta 9001). 
+	Para acessar a interface do sistema acesse a url 'http://localhost:9001'.
