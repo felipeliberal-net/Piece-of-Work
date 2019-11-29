@@ -19,7 +19,7 @@
                     $scope.doneTasks = response.data.taskworks.filter(function(item){return item.status == 3;});                    
                 },
                 function (error) {
-                    window.alert(error);
+                    $scope.addAlert('danger', 'O servidor de tarefas está offline.');
                 }
             )
         };
