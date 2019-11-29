@@ -5,7 +5,7 @@ namespace PoW.DataModel
 {
     public class PoWDbContext : DbContext
     {
-        public PoWDbContext() : base("PoWConnectionString")
+        public PoWDbContext() : base("PoW")
         {
         }
 

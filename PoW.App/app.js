@@ -2,15 +2,19 @@
     'use strict';
 
     var appModule = angular.module('pow.app');
+    
+    appModule.config([
+        'growlProvider', function(growlProvider) {
+            growlProvider.globalTimeToLive(5000);
+            growlProvider.globalPosition('top-center');
+    }]);
 
     appModule.controller('mainController', mainController);
     appModule.controller('taskModalController', taskModalController);
-
-    mainController.$inject = ['$scope', 'TaskWorkService', '$uibModal'];
     
-    function mainController($scope, TaskWorkService, $uibModal) {
-        $scope.alerts = [];
-
+    mainController.$inject = ['$scope', 'TaskWorkService', '$uibModal', 'growl'];
+    
+    function mainController($scope, TaskWorkService, $uibModal, growl) {
         $scope.getTaskWork = function () {
             TaskWorkService.getList().then(
                 function (response) {
@@ -19,7 +23,7 @@
                     $scope.doneTasks = response.data.taskworks.filter(function(item){return item.status == 3;});                    
                 },
                 function (error) {
-                    $scope.addAlert('danger', 'O servidor de tarefas está offline.');
+                    growl.error('danger', 'O servidor de tarefas está offline.');
                 }
             )
         };
@@ -29,8 +33,9 @@
             var modalInstance = $uibModal.open({
                 templateUrl: './modal/task-modal.html',
                 controller: 'taskModalController',
+                windowClass: 'show',
                 backdrop: 'static',
-                backdropClass: 'modal-backdrop h-full',
+                backdropClass: 'modal-backdrop h-full show',
                 resolve: {
                     params: function() {
                         return {
@@ -41,12 +46,8 @@
             });
 
             modalInstance.result.then(
-                function (response) {
-                    $scope.addAlert('success', 'Tarefa salva com sucesso.');
+                function () {
                     $scope.getTaskWork();
-                },
-                function (error) {
-                    $scope.addAlert('danger', 'Erro ao salvar a tarefa. ' + error.message);
                 }
             )
         };
@@ -60,8 +61,8 @@
           };
     }
 
-    taskModalController.$inject = ['$scope', 'TaskWorkService', '$uibModalInstance', 'params'];
-    function taskModalController($scope, TaskWorkService, $uibModalInstance, params) {
+    taskModalController.$inject = ['$scope', 'TaskWorkService', '$uibModalInstance', 'params', 'growl'];
+    function taskModalController($scope, TaskWorkService, $uibModalInstance, params, growl) {
         $scope.statuslist = [
             {
                 value: 1,
@@ -99,18 +100,41 @@
             }
             
             if ($scope.task.id == 0) {
-                TaskWorkService.insert($scope.task).then(saveSuccess, saveError);
-            } else if ($scope.task.id > 0)
-                TaskWorkService.update($scope.task.id, $scope.task).then(saveSuccess, saveError);            
+                TaskWorkService.insert($scope.task).then(
+                    function (response) {
+                        growl.success("Tarefa salva com sucesso.");
+                        $uibModalInstance.close();
+                    }, 
+                    function (error) {
+                        growl.error("Ocorreu um erro ao excluir a tarefa.");
+                    }
+                );
+            } else if ($scope.task.id > 0) {
+                TaskWorkService.update($scope.task.id, $scope.task).then(
+                    function (response) {
+                        growl.success("Tarefa salva com sucesso.");
+                        $uibModalInstance.close();
+                    }, 
+                    function (error) {
+                        growl.error("Ocorreu um erro ao excluir a tarefa.");
+                    }
+                );
+            }
         };
 
-        function saveSuccess(response) {
-            $uibModalInstance.close();
-        }
+        $scope.deleteClick = function() {
+            if ($scope.task.id == 0)
+                return;
 
-        function saveError(response) {
-            return;
-        }
+            TaskWorkService.delete($scope.task.id).then(
+                function (response) {
+                    growl.success("Tarefa removida com sucesso.");
+                    $uibModalInstance.close();
+                },
+                function (error) {
+                    growl.error("Ocorreu um erro ao excluir a tarefa.");
+                }
+            );
+        };
     }
-
 })(angular);
